@@ -171,10 +171,11 @@ header {
 .timer-ring.away { border-color: rgba(234, 179, 8, 0.3); box-shadow: 0 0 20px rgba(234, 179, 8, 0.1); }
 .timer-ring.abandoned { border-color: rgba(249, 115, 22, 0.4); box-shadow: 0 0 20px rgba(249, 115, 22, 0.2); animation: blink-border 1s infinite alternate; }
 .timer-value { font-family: var(--font-title); font-size: 1.8rem; font-weight: 700; letter-spacing: -0.02em; }
+.timer-value.expired { color: var(--status-occupied); font-size: 1.1rem; }
 .timer-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; margin-top: 4px; }
 .prompt-card { background: linear-gradient(135deg, rgba(239,68,68,0.1), rgba(249,115,22,0.1)); border: 1px solid rgba(249,115,22,0.4); border-radius: var(--radius-md); padding: 18px; margin: 10px 0; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px; animation: pulse-red-border 1.5s infinite alternate; }
-.prompt-card h4 { font-family: var(--font-title); color: #f97316; font-size: 1.1rem; }
-.prompt-card p { font-size: 0.85rem; color: #fed7aa; }
+.prompt-card h4 { font-family: var(--font-title); color: #c2410c; font-size: 1.1rem; font-weight: 700; }
+.prompt-card p { font-size: 0.85rem; color: #92400e; }
 
 .btn { font-family: var(--font-primary); font-size: 0.95rem; font-weight: 600; padding: 12px 24px; border-radius: var(--radius-md); border: none; cursor: pointer; transition: all 0.2s ease; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; }
 .btn-primary { background: var(--color-primary); color: var(--bg-main); box-shadow: 0 4px 14px 0 rgba(37, 99, 235, 0.3); }

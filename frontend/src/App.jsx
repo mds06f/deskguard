@@ -632,17 +632,35 @@ function App() {
 
                 {selectedDesk.status === 'occupied' && selectedDesk.session && (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-                    <div style={{ textAlign: 'center', background: 'rgba(255,255,255,0.02)', padding: '10px', borderRadius: '6px' }}>
+                    <div style={{ textAlign: 'center', background: 'rgba(255,255,255,0.02)', padding: '10px', borderRadius: '6px', border: '1px solid var(--border-card)' }}>
                       <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>Booked by: </span>
                       <strong>{selectedDesk.session.studentId}</strong>
                     </div>
 
-                    <div className="timer-container">
-                      <div className="timer-ring active">
-                        <span className="timer-value">{timeLeft || '02:00:00'}</span>
-                        <span className="timer-label">Session Remaining</span>
+                    {selectedDesk.session.prompted ? (
+                      /* Prompted / verification-in-progress state */
+                      <div className="prompt-card" style={{ animation: 'none' }}>
+                        <h4>Verification in Progress</h4>
+                        <p>Student has been asked to confirm presence. Auto-releasing in:</p>
+                        <div style={{ fontFamily: 'var(--font-title)', fontSize: '1.6rem', fontWeight: 700, color: '#c2410c' }}>
+                          {graceTimeLeft || '—'}
+                        </div>
                       </div>
-                    </div>
+                    ) : timeLeft === 'Expired' ? (
+                      /* Session time has expired, waiting for sweeper */
+                      <div style={{ textAlign: 'center', padding: '20px', background: 'rgba(239,68,68,0.05)', borderRadius: 'var(--radius-md)', border: '1px solid rgba(239,68,68,0.2)' }}>
+                        <div style={{ fontFamily: 'var(--font-title)', fontSize: '1rem', fontWeight: 700, color: 'var(--status-occupied)', marginBottom: 6 }}>Session Expired</div>
+                        <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>This session has expired. The desk will be freed shortly by the system sweeper.</p>
+                      </div>
+                    ) : (
+                      /* Normal session — show countdown */
+                      <div className="timer-container">
+                        <div className="timer-ring active">
+                          <span className="timer-value">{timeLeft || '—'}</span>
+                          <span className="timer-label">Session Remaining</span>
+                        </div>
+                      </div>
+                    )}
 
                     <button className="btn btn-secondary" onClick={() => navigate(`/desk/${selectedDesk.id}`)}>
                       Manage Booking (Simulate Student Scan)
@@ -671,9 +689,9 @@ function App() {
 
                 {selectedDesk.status === 'abandoned' && (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-                    <div className="prompt-card" style={{ background: 'rgba(239, 68, 68, 0.08)', borderColor: 'rgba(239, 68, 68, 0.4)', animation: 'none' }}>
-                      <h4 style={{ color: '#ef4444' }}>Session Abandoned</h4>
-                      <p style={{ fontSize: '0.85rem' }}>This seat was auto-released due to hoarding. A librarian was notified to clear physical belongings.</p>
+                    <div style={{ background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.3)', borderRadius: 'var(--radius-md)', padding: '16px', textAlign: 'center' }}>
+                      <div style={{ fontFamily: 'var(--font-title)', fontSize: '1rem', fontWeight: 700, color: '#b91c1c', marginBottom: 8 }}>Session Abandoned</div>
+                      <p style={{ fontSize: '0.82rem', color: '#7f1d1d', lineHeight: 1.5 }}>This seat was auto-released due to hoarding. A librarian has been notified to clear physical belongings.</p>
                     </div>
 
                     <button className="btn btn-success" onClick={() => navigate(`/desk/${selectedDesk.id}`)}>
