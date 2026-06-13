@@ -229,37 +229,6 @@ router.post('/desks/:id/reset', async (req, res) => {
   }
 });
 
-router.get('/analytics', async (req, res) => {
-  try {
-    const db = await getDatabase();
-    
-    const stats = await db.get(`
-      SELECT 
-        COUNT(CASE WHEN status = 'free' THEN 1 END) as free,
-        COUNT(CASE WHEN status = 'occupied' THEN 1 END) as occupied,
-        COUNT(CASE WHEN status = 'away' THEN 1 END) as away,
-        COUNT(CASE WHEN status = 'abandoned' THEN 1 END) as abandoned,
-        COUNT(*) as total
-      FROM desks
-    `);
-
-    const abandonedCountResult = await db.get("SELECT COUNT(*) as count FROM sessions WHERE status = 'abandoned'");
-    const rawCount = abandonedCountResult ? abandonedCountResult.count : 0;
-    const hoursSaved = (rawCount * 1.5).toFixed(1);
-
-    res.json({
-      free: stats.free || 0,
-      occupied: stats.occupied || 0,
-      away: stats.away || 0,
-      abandoned: stats.abandoned || 0,
-      total: stats.total || 0,
-      hoursSaved: parseFloat(hoursSaved)
-    });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
 router.get('/analytics/full', async (req, res) => {
   try {
     const db = await getDatabase();
@@ -376,6 +345,37 @@ router.get('/analytics/full', async (req, res) => {
       perZone,
       topDesks,
       recentSessions
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.get('/analytics', async (req, res) => {
+  try {
+    const db = await getDatabase();
+    
+    const stats = await db.get(`
+      SELECT 
+        COUNT(CASE WHEN status = 'free' THEN 1 END) as free,
+        COUNT(CASE WHEN status = 'occupied' THEN 1 END) as occupied,
+        COUNT(CASE WHEN status = 'away' THEN 1 END) as away,
+        COUNT(CASE WHEN status = 'abandoned' THEN 1 END) as abandoned,
+        COUNT(*) as total
+      FROM desks
+    `);
+
+    const abandonedCountResult = await db.get("SELECT COUNT(*) as count FROM sessions WHERE status = 'abandoned'");
+    const rawCount = abandonedCountResult ? abandonedCountResult.count : 0;
+    const hoursSaved = (rawCount * 1.5).toFixed(1);
+
+    res.json({
+      free: stats.free || 0,
+      occupied: stats.occupied || 0,
+      away: stats.away || 0,
+      abandoned: stats.abandoned || 0,
+      total: stats.total || 0,
+      hoursSaved: parseFloat(hoursSaved)
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
